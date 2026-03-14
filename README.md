@@ -26,16 +26,26 @@ The homelab uses NVMe storage for the operating system and services, while secur
 Internet
 
    │
+   
    │
+   
 Tailscale VPN
+
    │
    ▼
+   
 Raspberry Pi 5 Server
+
 │
+
 ├─ SSH administration
+
 ├─ Docker containers
+
 ├─ Nextcloud
+
 ├─ Monitoring tools
+
 └─ Future services
 
 All services are accessed through the VPN rather than being directly exposed to the public internet.
