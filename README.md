@@ -36,17 +36,17 @@ Tailscale VPN
    
 Raspberry Pi 5 Server
 
-│
+   │
 
-├─ SSH administration
+   ├─ SSH administration
 
-├─ Docker containers
+   ├─ Docker containers
 
-├─ Nextcloud
+   ├─ Nextcloud
 
-├─ Monitoring tools
+   ├─ Monitoring tools
 
-└─ Future services
+   └─ Future services
 
 All services are accessed through the VPN rather than being directly exposed to the public internet.
 
