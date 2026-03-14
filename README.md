@@ -23,11 +23,19 @@ Architecture Overview
 
 The homelab uses NVMe storage for the operating system and services, while secure remote access is provided through a private VPN network.
 
-Internet »» Tailscale VPN »» Raspberry Pi 5 Server:                                                                                          
- • SSH administration
- • Docker containers
- • Nextcloud
- • Monitoring tools
+Internet                                                                                                                       
+    │                                                                                                                       
+    │                                                                                                                       
+Tailscale VPN                                                                                                                       
+    │                                                                                                                       
+    ▼                                                                                                                       
+Raspberry Pi 5 Server                                                                                                                       
+│                                                                                                                       
+├─ SSH administration                                                                                                                       
+├─ Docker containers                                                                                                                       
+├─ Nextcloud                                                                                                                       
+├─ Monitoring tools                                                                                                                       
+└─ Future services                                                                                                                       
 
 All services are accessed through the VPN rather than being directly exposed to the public internet.
 
@@ -37,15 +45,15 @@ The system includes two NVMe SSDs.
 
 Initially only one is used for the server, leaving the second drive available for future projects.
 
-SSD1 (nvme0n1) – SYSTEM
-├─ Raspberry Pi OS
-├─ Docker
-├─ Nextcloud
-├─ Databases
-└─ Server services
+SSD1 (nvme0n1) – SYSTEM                                                                                                                       
+├─ Raspberry Pi OS                                                                                                                       
+├─ Docker                                                                                                                       
+├─ Nextcloud                                                                                                                       
+├─ Databases                                                                                                                       
+└─ Server services                                                                                                                       
 
-SSD2 (nvme1n1) – RESERVED
-└─ Future projects / additional storage
+SSD2 (nvme1n1) – RESERVED                                                                                                                       
+└─ Future projects / additional storage                                                                                                                       
 
 This approach keeps the system simple while maintaining expansion capability.
 
@@ -78,13 +86,13 @@ lsblk
 
 Example output:
 
-NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
-mmcblk0     179:0    0  58.4G  0 disk
-├─mmcblk0p1 179:1    0   512M  0 part /boot/firmware
-└─mmcblk0p2 179:2    0  57.9G  0 part /
+NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS                                                                                                                       
+mmcblk0     179:0    0  58.4G  0 disk                                                                                                                       
+├─mmcblk0p1 179:1    0   512M  0 part /boot/firmware                                                                                                                       
+└─mmcblk0p2 179:2    0  57.9G  0 part /                                                                                                                       
 
-nvme0n1     259:0    0 931.5G  0 disk
-nvme1n1     259:1    0 931.5G  0 disk
+nvme0n1     259:0    0 931.5G  0 disk                                                                                                                       
+nvme1n1     259:1    0 931.5G  0 disk                                                                                                                       
 
 Meaning:
 
