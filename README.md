@@ -23,19 +23,11 @@ Architecture Overview
 
 The homelab uses NVMe storage for the operating system and services, while secure remote access is provided through a private VPN network.
 
-Internet
-   │
-   │
-Tailscale VPN
-   │
-   ▼
-Raspberry Pi 5 Server
-│
-├─ SSH administration
-├─ Docker containers
-├─ Nextcloud
-├─ Monitoring tools
-└─ Future services
+Internet »» Tailscale VPN »» Raspberry Pi 5 Server:│
+ • SSH administration
+ • Docker containers
+ • Nextcloud
+ • Monitoring tools
 
 All services are accessed through the VPN rather than being directly exposed to the public internet.
 
