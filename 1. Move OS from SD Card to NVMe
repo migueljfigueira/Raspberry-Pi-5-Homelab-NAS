@@ -1,26 +1,14 @@
-Move Raspberry Pi OS from SD Card to NVMe
+## Move Raspberry Pi OS from SD Card to NVMe
 
 This guide documents how to migrate a running Raspberry Pi OS installation from an SD card to an NVMe SSD on a Raspberry Pi 5.
 
-The setup used:
-
-Hardware
-
-Raspberry Pi 5 (8GB)
-
-Dual NVMe adapter (PCIe switch)
-
-2 × Crucial P3 Plus 1TB NVMe
-
-Raspberry Pi OS Lite (Bookworm)
-
-Goal:
+## Goal:
 
 SD card  →  NVMe SSD (system disk)
 
 After migration the Pi boots directly from NVMe.
 
-1. Install Raspberry Pi OS (initial boot)
+## 1. Install Raspberry Pi OS (initial boot)
 
 Flash Raspberry Pi OS Lite to the SD card using Raspberry Pi Imager.
 
@@ -28,18 +16,15 @@ Boot the Pi and connect via SSH.
 
 Verify the system disk:
 
-lsblk
+command: lsblk
 
 Expected:
 
 mmcblk0
 ├─mmcblk0p1 /boot/firmware
 └─mmcblk0p2 /
-2. Verify NVMe drives are detected
 
-Check if the NVMe drives are visible:
-
-lsblk
+ ## 2. Verify NVMe drives are detected
 
 Example:
 
@@ -48,11 +33,11 @@ nvme1n1
 
 These are the two SSDs connected through the NVMe adapter.
 
-3. Configure bootloader to allow NVMe boot
+ ## 3. Configure bootloader to allow NVMe boot
 
 Open Raspberry Pi configuration:
 
-sudo raspi-config
+command: sudo raspi-config
 
 Navigate:
 
@@ -62,16 +47,13 @@ Advanced Options
 
 This configures the EEPROM bootloader to attempt NVMe boot before SD.
 
-Example boot order:
-
-BOOT_ORDER=0xf146
-4. Fix NVMe controller power-management issue
+ ## 4. Fix NVMe controller power-management issue
 
 Some NVMe drives crash due to PCIe power states on Raspberry Pi 5.
 
 Edit the kernel command line:
 
-sudo nano /boot/firmware/cmdline.txt
+command: sudo nano /boot/firmware/cmdline.txt
 
 Append to the end of the single line:
 
@@ -87,14 +69,15 @@ sudo reboot
 
 Verify NVMe stability:
 
-dmesg | grep -i nvme
+command: dmesg | grep -i nvme
 
 You should no longer see:
 
 controller is down
 I/O error
 reset failure
-5. Clone the SD card to NVMe
+
+## 5. Clone the SD card to NVMe
 
 Clone the entire SD card to the NVMe SSD.
 
@@ -102,34 +85,29 @@ SD → nvme0n1
 
 Run:
 
-sudo dd if=/dev/mmcblk0 of=/dev/nvme0n1 bs=64M status=progress conv=fsync
+command: sudo dd if=/dev/mmcblk0 of=/dev/nvme0n1 bs=64M status=progress conv=fsync
 
-Explanation:
+## Explanation: 
+- sudo: Runs the command with administrator privileges. Required because you're accessing raw storage devices.
+- dd: A low‑level copying tool. Nickname: “disk destroyer” — because a single mistake can wipe the wrong drive.
+- if=/dev/mmcblk0: Input file → the source device. This is your microSD card.
+- of=/dev/nvme0n1: Output file → the destination device This is your NVMe SSD.
+- bs=64M: Block size = 64 megabytes. This makes the copy faster by reading/writing in large chunks instead of tiny blocks.
+- status=progress: Shows a live progress bar instead of silently running.
+- conv=fsync: Forces dd to flush all data to disk before finishing.
 
-Option	Purpose
-if=	input device (SD card)
-of=	output device (NVMe)
-bs=64M	larger blocks for faster copying
-status=progress	show progress
-conv=fsync	ensure data is written to disk
-
-The clone copies:
-
+## The clone copies:
 boot partition
-
 root filesystem
-
 installed packages
-
 user accounts
-
 system configuration
 
-6. Verify the clone
+## 6. Verify the clone
 
 Check the NVMe disk layout:
 
-lsblk
+command: lsblk
 
 Expected:
 
@@ -139,11 +117,11 @@ nvme0n1
 
 This mirrors the SD card partitions.
 
-7. Boot from NVMe
+## 7. Boot from NVMe
 
 Shutdown the system:
 
-sudo poweroff
+command: sudo poweroff
 
 Remove the SD card.
 
@@ -151,11 +129,11 @@ Power the Pi back on.
 
 The bootloader will now load the system from NVMe.
 
-8. Confirm system is running from NVMe
+## 8. Confirm system is running from NVMe
 
 Reconnect via SSH and check:
 
-lsblk
+command: lsblk
 
 Expected:
 
@@ -165,7 +143,8 @@ nvme0n1p2 /
 The root filesystem should now be:
 
 /dev/nvme0n1p2
-9. Expand filesystem to full SSD capacity
+
+## 9. Expand filesystem to full SSD capacity
 
 Because the clone copies the SD layout, the root partition is still ~58GB.
 
@@ -173,7 +152,7 @@ Expand it to use the full disk.
 
 Run:
 
-sudo raspi-config
+command: sudo raspi-config
 
 Navigate:
 
@@ -182,11 +161,11 @@ Advanced Options
 
 Reboot:
 
-sudo reboot
+command: sudo reboot
 
 Verify expansion:
 
-df -h /
+command: df -h /
 
 Example result:
 
@@ -201,20 +180,16 @@ nvme1n1 (1TB)
 └─ unused (future projects)
 Benefits of NVMe Boot
 
-Compared to SD cards:
+## Compared to SD cards:
 
 Storage	Typical speed
 SD card	~50 MB/s
 NVMe on Pi 5	~400–800 MB/s
 
-Advantages:
+## Advantages:
 
-faster boot
-
-faster package installs
-
-higher durability
-
-better database performance
-
-better reliability for server workloads
+ • faster boot
+ • faster package installs
+ • higher durability
+ • better database performance
+ • better reliability for server workloads
