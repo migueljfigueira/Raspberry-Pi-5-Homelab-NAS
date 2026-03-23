@@ -22,8 +22,7 @@ The goal of this project is to build a reliable, secure, and high‑performance 
 
  • Raspberry Pi 5 8GB RAM                                                                                                                                                                                               
  • Storage	2x Crucial CT1000P3PSSD8 1TB NVMe SSD                                                                                                                                                                                              
- • NVMe Adapter	MPS2280D PCIe Adapter                                                                                                                                                                                              
- • MicroSD Card                                                                                                                                                                                              
+ • NVMe Adapter	MPS2280D PCIe Adapter(issues with this hardware pls read until end)                                                                                                                                                                                            • MicroSD Card                                                                                                                                                                                              
 
 ## Architecture Overview                                                                                                                                                                                              
 
@@ -59,8 +58,27 @@ SSD1 (nvme0n1) – SYSTEM
 This approach keeps the system simple while maintaining expansion capability.
 
 ## Operating System: Raspberry Pi OS Lite (64-bit)
-                                                                                                                   
- • minimal overhead                                                                                                                     
- • stable and well supported                                                                                                                     
- • ideal for headless servers                                                                                                                     
- • good compatibility with container platforms                                                                                                                     
+
+---
+
+## Incident Note: NVMe Configuration Failure
+
+**Status:** Resolved  
+**Impact:** NAS unavailable  
+
+### Summary
+The system failure was caused by selecting an incompatible NVMe HAT.
+
+### Details
+- Device used: **GeeekPi N04 M.2 2280**
+- Constraint: Single NVMe slot
+- Expected: Multi-drive support
+
+### Root Cause
+Hardware selection did not meet system design requirements, leading to instability under load.
+
+### Resolution
+Hardware configuration corrected and system restored.
+
+### Outcome
+System is stable and functioning normally.                                                                                                                     
